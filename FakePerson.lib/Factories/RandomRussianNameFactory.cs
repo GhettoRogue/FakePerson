@@ -1,6 +1,8 @@
 ﻿using FakePerson.lib.Models.Names;
+using FakePerson.lib.Randomizers;
+using FakePerson.lib.Randomizers.Names;
 
-namespace FakePerson.lib.Factories.NameFactories;
+namespace FakePerson.lib.Factories;
 
 public class RandomRussianNameFactory : IFactory<RussianName>
 {

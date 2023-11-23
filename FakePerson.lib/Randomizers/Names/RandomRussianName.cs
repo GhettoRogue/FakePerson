@@ -1,6 +1,6 @@
 ﻿using FakePerson.lib.Models.Names;
 
-namespace FakePerson.lib;
+namespace FakePerson.lib.Randomizers.Names;
 
 public class RandomRussianName : IRandom<RussianName>
 {
