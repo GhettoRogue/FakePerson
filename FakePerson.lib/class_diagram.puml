@@ -65,7 +65,7 @@ package Randomizers{
         }
         
     }
-    Random <|-- RandomExtensions
+    Random <|.. RandomExtensions
     class RandomExtensions {
         + {static} NextString(this random : Random, IEnumerable<string> : source)
         + {static} NextAge(this random : Random) : int
