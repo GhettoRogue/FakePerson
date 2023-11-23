@@ -1,4 +1,144 @@
 @startuml
 'https://plantuml.com/class-diagram
 
+
+package Models {
+    abstract class AbstractName {
+        + FirstName : string
+    }
+    package Names {
+        AbstractName <|-- RussianName
+        class RussianName {
+            + LastName : string
+            + Patronymic : string
+        }
+        
+        AbstractName <|-- SimpleName
+        class SimpleName {}
+    }
+    
+    abstract class AbstractPhone {
+        + Number : string
+    }
+    
+    package Phones {
+        AbstractPhone <|-- SimplePhone
+        class SimplePhone {}
+        
+        AbstractPhone <|-- Phone
+        class SimplePhone{ }
+    }
+    
+    AbstractName <--* Person
+    AbstractPhone <--* Person
+    class Person {
+        + Name : AbstractName
+        + Phone : AbstractPhone
+        + Age : int
+        + Email : string
+        + Address : string
+    }
+}
+
+package Randomizers{
+    package Names{
+        IRandom <|.. RussianNameRandom
+        RandomExtensions <-- RussianNameRandom
+        class RussianNameRandom {
+            - listOfLastNames : string[]
+            - listOfFirstNames : string[]
+            - listOfPatronymics : string[]
+            
+            + RussianNameRandom()
+            
+            + Get() : RussianName
+        }
+        
+        IRandom <|.. SimpleNameRandom
+        RandomExtensions <-- SimpleNameRandom
+        class SimpleNameRandom {
+            - IEnumerable<string> : listOfNames
+            
+            + SimpleNameRandom() : listOfNames[]
+            
+            + Get() : SimpleName
+        }
+        
+    }
+    Random <|-- RandomExtensions
+    class RandomExtensions {
+        + {static} NextString(this random : Random, IEnumerable<string> : source)
+        + {static} NextAge(this random : Random) : int
+    }
+    
+    interface IRandom<<T>>
+    {
+        + {abstract} Get() : T
+    }
+    
+    IRandom <|-- RandomPerson
+    PersonBuilder <--* RandomPerson
+    class RandomPerson{
+        - personBuilder : PersonBuilder
+        + AddName(type : Type)
+        + AddAge()
+        + AddEmail()
+        + AddAddress()
+        + Get() : Person
+    }
+}
+
+
+
+package Factories {
+    interface IFactory <<T>> {
+        + {abstract} Create() : T
+    }
+    
+    AbstractPhone <.. PersonBuilder
+        AbstractName <.. PersonBuilder
+        Person <--* PersonBuilder
+        class PersonBuilder {
+            - person : Person
+            + PersonBuilder(name : AbstractName)
+            
+            + SetAge(age : int) : PersonBuilder
+            + SetPhone(phone : AbstractPhone) : PersonBuilder
+            + SetEmail(email : string) : PersonBuilder
+            + SetAddress(address : string) : PersonBuilder
+            
+            + Build() : Person
+        }
+    
+    AbstractName <.. RandomAbstractNameFactory
+    IFactory <|.. RandomAbstractNameFactory
+    IFactory <--* RandomAbstractNameFactory
+    class RandomAbstractNameFactory {
+        - factory : IFactory<AbstractName>
+        
+        + RandomAbstractNameFactory(factory : IFactory<AbstractName>)
+        
+        + Create() : AbstractName
+    }
+    
+    package NameFactories {
+        
+        RussianName <.. RandomRussianNameFactory
+        IFactory <|.. RandomRussianNameFactory
+        IRandom <--* RandomRussianNameFactory
+        class RandomRussianNameFactory {
+            - random : IRandom<RussianName>
+            + Create() : RussianName
+        }
+        
+        IFactory <|.. RandomRussianNameFactory
+        IRandom <--* RandomSimpleNameFactory
+        class RandomSimpleNameFactory{
+        - random : IRandom<SimpleName>
+        + Create() : SimpleName
+        }
+    }
+}
+
+
 @enduml
