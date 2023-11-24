@@ -17,10 +17,6 @@ package Models {
         class SimpleName {}
     }
     
-    abstract class AbstractPhone {
-        + Number : string
-    }
-    
     package Phones {
         AbstractPhone <|-- SimplePhone
         class SimplePhone {}
